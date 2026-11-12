@@ -171,7 +171,7 @@ const seedOut = (await lines()).slice(before);
 names = await treeNames();
 check("seed example: no errors", !seedOut.some(([k]) => k === "error"), seedOut);
 check("seed example: demo + loops make nodes", names.length > 0, names);
-await page.screenshot({ path: process.env.SHOT ?? "/workspace/screenshots/overtone-supersonic-2.png" });
+await page.screenshot({ path: process.env.SHOT ?? "screenshots/overtone-supersonic-2.png" });
 await page.keyboard.press("Control+.");
 await page.waitForTimeout(500);
 check("Ctrl-. stops", (await page.evaluate(() => window.ovt.pendingTimers())) === 0);

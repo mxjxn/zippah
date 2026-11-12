@@ -1,0 +1,499 @@
+[
+  {
+    "at": 1794504555913,
+    "eval": "(demo 3 (* 0.15 (rlpf (saw [110 110.6]) (line:kr 300 3000 3)",
+    "lines": [
+      [
+        "input",
+        "(demo 3 (* 0.15 (rlpf (saw [110 110.6]) (line:kr 300 3000 3) 0.3)))\n\n(defsynth pluck-bass [note 40 amp 0.35 cutoff 1400]\n  (* amp (env-gen (perc 0.005 0.35) :action FREE)\n     (rlpf (saw (midicps note)) cutoff 0.25)))\n\n(def m (metro 118))\n(seq-loop :bass m 0.5 [40 nil 40 43 nil 47 45 nil] (fn [n] (pluck-bass n)))\n(beat-loop :kick m (fn [b] (play :sc808_bassdrum {:amp 1.5})))"
+      ],
+      [
+        "result",
+        "=> [:started :kick]"
+      ]
+    ]
+  },
+  {
+    "at": 1794504569723,
+    "eval": "(stop-loop :bass) (stop-loop :kick)",
+    "lines": [
+      [
+        "input",
+        "(stop-loop :bass) (stop-loop :kick)"
+      ],
+      [
+        "result",
+        "=> [:stopped :kick]"
+      ]
+    ]
+  },
+  {
+    "step": "step1-seed",
+    "wav": "step1-seed.wav",
+    "startedAt": 1794504555407,
+    "evals": [
+      [
+        "input",
+        "(demo 3 (* 0.15 (rlpf (saw [110 110.6]) (line:kr 300 3000 3) 0.3)))\n\n(defsynth pluck-bass [note 40 amp 0.35 cutoff 1400]\n  (* amp (env-gen (perc 0.005 0.35) :action FREE)\n     (rlpf (saw (midicps note)) cutoff 0.25)))\n\n(def m (metro 118))\n(seq-loop :bass m 0.5 [40 nil 40 43 nil 47 45 nil] (fn [n] (pluck-bass n)))\n(beat-loop :kick m (fn [b] (play :sc808_bassdrum {:amp 1.5})))"
+      ],
+      [
+        "result",
+        "=> [:started :kick]"
+      ],
+      [
+        "input",
+        "(stop-loop :bass) (stop-loop :kick)"
+      ],
+      [
+        "result",
+        "=> [:stopped :kick]"
+      ]
+    ]
+  },
+  {
+    "at": 1794504570848,
+    "eval": "(demo (sin-osc 440))",
+    "lines": [
+      [
+        "input",
+        "(demo (sin-osc 440))"
+      ],
+      [
+        "result",
+        "=> 11064"
+      ]
+    ]
+  },
+  {
+    "step": "step2-sin440",
+    "wav": "step2-sin440.wav",
+    "startedAt": 1794504570539,
+    "evals": [
+      [
+        "input",
+        "(demo (sin-osc 440))"
+      ],
+      [
+        "result",
+        "=> 11064"
+      ]
+    ]
+  },
+  {
+    "at": 1794504575774,
+    "eval": "(def nid (demo 30 (* 0.2 (saw 220))))",
+    "lines": [
+      [
+        "input",
+        "(def nid (demo 30 (* 0.2 (saw 220))))"
+      ],
+      [
+        "result",
+        "=> #'user/nid"
+      ]
+    ]
+  },
+  {
+    "at": 1794504578073,
+    "eval": "(ctl nid :freq 330)",
+    "lines": [
+      [
+        "input",
+        "(ctl nid :freq 330)"
+      ],
+      [
+        "result",
+        "=> :ok"
+      ]
+    ]
+  },
+  {
+    "at": 1794504580876,
+    "eval": "(kill nid)",
+    "lines": [
+      [
+        "input",
+        "(kill nid)"
+      ],
+      [
+        "result",
+        "=> :ok"
+      ]
+    ]
+  },
+  {
+    "step": "step4-ctl-kill",
+    "wav": "step4-ctl-kill.wav",
+    "startedAt": 1794504575462,
+    "evals": [
+      [
+        "input",
+        "(def nid (demo 30 (* 0.2 (saw 220))))"
+      ],
+      [
+        "result",
+        "=> #'user/nid"
+      ],
+      [
+        "input",
+        "(ctl nid :freq 330)"
+      ],
+      [
+        "result",
+        "=> :ok"
+      ],
+      [
+        "input",
+        "(kill nid)"
+      ],
+      [
+        "result",
+        "=> :ok"
+      ]
+    ]
+  },
+  {
+    "at": 1794504583512,
+    "eval": "(pdef :lead (pbind :instrument pluck-bass",
+    "lines": [
+      [
+        "input",
+        "(pdef :lead (pbind :instrument pluck-bass\n                   :note (p+ (pxrand [0 3 7 10 12] :inf) 64)\n                   :dur (pseq [0.5 0.25 0.25] :inf)\n                   :amp (pwhite 0.15 0.3 :inf :float)\n                   :cutoff (pexprand 600 4000 :inf))\n      {:metro m :quant 4})"
+      ],
+      [
+        "result",
+        "=> [:started :lead]"
+      ]
+    ]
+  },
+  {
+    "at": 1794504590812,
+    "eval": "(pdef :lead (pbind :instrument pluck-bass",
+    "lines": [
+      [
+        "input",
+        "(pdef :lead (pbind :instrument pluck-bass\n                   :note (p+ (pseq [0 12 0 -12] :inf) 64)\n                   :dur 0.5 :amp 0.25 :cutoff 2500))"
+      ],
+      [
+        "result",
+        "=> [:updated :lead]"
+      ]
+    ]
+  },
+  {
+    "at": 1794504596110,
+    "eval": "(pstop :lead)",
+    "lines": [
+      [
+        "input",
+        "(pstop :lead)"
+      ],
+      [
+        "result",
+        "=> [:stopped :lead]"
+      ]
+    ]
+  },
+  {
+    "step": "step5-pdef",
+    "wav": "step5-pdef.wav",
+    "startedAt": 1794504583189,
+    "evals": [
+      [
+        "input",
+        "(pdef :lead (pbind :instrument pluck-bass\n                   :note (p+ (pxrand [0 3 7 10 12] :inf) 64)\n                   :dur (pseq [0.5 0.25 0.25] :inf)\n                   :amp (pwhite 0.15 0.3 :inf :float)\n                   :cutoff (pexprand 600 4000 :inf))\n      {:metro m :quant 4})"
+      ],
+      [
+        "result",
+        "=> [:started :lead]"
+      ],
+      [
+        "input",
+        "(pdef :lead (pbind :instrument pluck-bass\n                   :note (p+ (pseq [0 12 0 -12] :inf) 64)\n                   :dur 0.5 :amp 0.25 :cutoff 2500))"
+      ],
+      [
+        "result",
+        "=> [:updated :lead]"
+      ],
+      [
+        "input",
+        "(pstop :lead)"
+      ],
+      [
+        "result",
+        "=> [:stopped :lead]"
+      ]
+    ]
+  },
+  {
+    "at": 1794504599224,
+    "eval": "(beat-loop :kick m (fn [b] (play :sc808_bassdrum {:amp 1.5})",
+    "lines": [
+      [
+        "input",
+        "(beat-loop :kick m (fn [b] (play :sc808_bassdrum {:amp 1.5})))"
+      ],
+      [
+        "result",
+        "=> [:started :kick]"
+      ]
+    ]
+  },
+  {
+    "at": 1794504603528,
+    "eval": "(m :bpm 132)",
+    "lines": [
+      [
+        "input",
+        "(m :bpm 132)"
+      ],
+      [
+        "result",
+        "=> 132"
+      ]
+    ]
+  },
+  {
+    "at": 1794504607822,
+    "eval": "(stop-loop :kick)",
+    "lines": [
+      [
+        "input",
+        "(stop-loop :kick)"
+      ],
+      [
+        "result",
+        "=> [:stopped :kick]"
+      ]
+    ]
+  },
+  {
+    "step": "step6-tempo",
+    "wav": "step6-tempo.wav",
+    "startedAt": 1794504598925,
+    "evals": [
+      [
+        "input",
+        "(beat-loop :kick m (fn [b] (play :sc808_bassdrum {:amp 1.5})))"
+      ],
+      [
+        "result",
+        "=> [:started :kick]"
+      ],
+      [
+        "input",
+        "(m :bpm 132)"
+      ],
+      [
+        "result",
+        "=> 132"
+      ],
+      [
+        "input",
+        "(stop-loop :kick)"
+      ],
+      [
+        "result",
+        "=> [:stopped :kick]"
+      ]
+    ]
+  },
+  {
+    "at": 1794504610135,
+    "eval": "(play :prophet {:note 28 :release 8 :cutoff 70})",
+    "lines": [
+      [
+        "input",
+        "(play :prophet {:note 28 :release 8 :cutoff 70})"
+      ],
+      [
+        "result",
+        "=> 11145"
+      ]
+    ]
+  },
+  {
+    "at": 1794504612595,
+    "eval": "(sample :bd_haus)",
+    "lines": [
+      [
+        "input",
+        "(sample :bd_haus)"
+      ],
+      [
+        "result",
+        "=> #<Promise>"
+      ],
+      [
+        "result",
+        "=> 11146"
+      ]
+    ]
+  },
+  {
+    "at": 1794504615044,
+    "eval": "(sample :bd_haus)",
+    "lines": [
+      [
+        "input",
+        "(sample :bd_haus)"
+      ],
+      [
+        "result",
+        "=> 11147"
+      ]
+    ]
+  },
+  {
+    "step": "step7-bundled",
+    "wav": "step7-bundled.wav",
+    "startedAt": 1794504609834,
+    "evals": [
+      [
+        "input",
+        "(play :prophet {:note 28 :release 8 :cutoff 70})"
+      ],
+      [
+        "result",
+        "=> 11145"
+      ],
+      [
+        "input",
+        "(sample :bd_haus)"
+      ],
+      [
+        "result",
+        "=> #<Promise>"
+      ],
+      [
+        "result",
+        "=> 11146"
+      ],
+      [
+        "input",
+        "(sample :bd_haus)"
+      ],
+      [
+        "result",
+        "=> 11147"
+      ]
+    ]
+  },
+  {
+    "at": 1794504618656,
+    "eval": "(stop)",
+    "lines": [
+      [
+        "input",
+        "(stop)"
+      ],
+      [
+        "result",
+        "=> :stopped"
+      ]
+    ]
+  },
+  {
+    "at": 1794504620163,
+    "eval": "(seq-loop :dense m 0.25 [64 67 71 74] (fn [n] (pluck-bass n ",
+    "lines": [
+      [
+        "input",
+        "(seq-loop :dense m 0.25 [64 67 71 74] (fn [n] (pluck-bass n :amp 0.4)))"
+      ],
+      [
+        "result",
+        "=> [:started :dense]"
+      ]
+    ]
+  },
+  {
+    "at": 1794504623455,
+    "eval": "(pstop :dense)",
+    "lines": [
+      [
+        "input",
+        "(pstop :dense)"
+      ],
+      [
+        "result",
+        "=> [:stopped :dense]"
+      ]
+    ]
+  },
+  {
+    "at": 1794504625260,
+    "eval": "(seq-loop :dense2 m 0.25 [76 79 76 72] (fn [n] (pluck-bass n",
+    "lines": [
+      [
+        "input",
+        "(seq-loop :dense2 m 0.25 [76 79 76 72] (fn [n] (pluck-bass n :amp 0.4)))"
+      ],
+      [
+        "result",
+        "=> [:started :dense2]"
+      ]
+    ]
+  },
+  {
+    "at": 1794504628064,
+    "eval": "(stop)",
+    "lines": [
+      [
+        "input",
+        "(stop)"
+      ],
+      [
+        "result",
+        "=> :stopped"
+      ]
+    ]
+  },
+  {
+    "step": "step8-stop",
+    "wav": "step8-stop.wav",
+    "startedAt": 1794504618355,
+    "evals": [
+      [
+        "input",
+        "(stop)"
+      ],
+      [
+        "result",
+        "=> :stopped"
+      ],
+      [
+        "input",
+        "(seq-loop :dense m 0.25 [64 67 71 74] (fn [n] (pluck-bass n :amp 0.4)))"
+      ],
+      [
+        "result",
+        "=> [:started :dense]"
+      ],
+      [
+        "input",
+        "(pstop :dense)"
+      ],
+      [
+        "result",
+        "=> [:stopped :dense]"
+      ],
+      [
+        "input",
+        "(seq-loop :dense2 m 0.25 [76 79 76 72] (fn [n] (pluck-bass n :amp 0.4)))"
+      ],
+      [
+        "result",
+        "=> [:started :dense2]"
+      ],
+      [
+        "input",
+        "(stop)"
+      ],
+      [
+        "result",
+        "=> :stopped"
+      ]
+    ]
+  }
+]

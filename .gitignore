@@ -5,3 +5,6 @@ public/supersonic-core/
 public/supersonic-synthdefs/
 public/supersonic-samples/
 public/vendor/
+audio/*.wav
+.venv/
+screenshots/
