@@ -2,6 +2,8 @@
 
 **Overtone REPL for the browser**
 
+See [NEXT_STEPS.md](NEXT_STEPS.md) for the first audio-test pass and remaining work.
+
 A zero-install browser page, shaped like Strudel. You type **Clojure** and hear **SuperSonic**, Sam Aaron's WASM
 build of scsynth, which runs in an AudioWorklet. The language is an Overtone-flavoured surface evaluated by **SCI**
 (through Scittle) in the page. It includes a real **SynthDef compiler**: `defsynth`, `demo`, and ~100 ugens become SynthDef
