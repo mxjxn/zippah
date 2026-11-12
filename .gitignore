@@ -1,0 +1,7 @@
+node_modules/
+dist/
+public/supersonic/
+public/supersonic-core/
+public/supersonic-synthdefs/
+public/supersonic-samples/
+public/vendor/

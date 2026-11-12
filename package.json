@@ -1,0 +1,30 @@
+{
+  "name": "overtone-supersonic",
+  "version": "0.0.0",
+  "description": "Local spike: Strudel-shaped browser live-coding page, Clojure (SCI) surface, SuperSonic engine",
+  "scripts": {
+    "assets": "node scripts/copy-assets.mjs",
+    "predev": "npm run assets",
+    "dev": "vite",
+    "prebuild": "npm run assets",
+    "build": "vite build",
+    "preview": "vite preview",
+    "smoke": "npm test",
+    "test": "npm run assets --silent && node test/run.mjs",
+    "test:browser": "node test/browser.mjs"
+  },
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "dependencies": {
+    "scittle": "0.8.33",
+    "supersonic-scsynth": "0.97.0",
+    "supersonic-scsynth-core": "0.97.0",
+    "supersonic-scsynth-samples": "0.97.0",
+    "supersonic-scsynth-synthdefs": "0.97.0"
+  },
+  "devDependencies": {
+    "playwright-core": "1.65.0",
+    "vite": "8.3.8"
+  },
+  "private": true
+}

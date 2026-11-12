@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <title>overtone-supersonic (local spike)</title>
+    <!-- SCI for the browser; classic script, defines globalThis.scittle -->
+    <script src="/vendor/scittle.js"></script>
+  </head>
+  <body>
+    <header>
+      <button id="boot">Boot</button>
+      <button id="eval" title="Cmd/Ctrl-Enter">Eval</button>
+      <span id="status" data-state="idle">idle</span>
+      <span class="hint">Cmd/Ctrl-Enter eval · Cmd/Ctrl-. stop</span>
+    </header>
+    <main>
+      <textarea id="editor" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+      <section id="transcript">
+        <div class="bar"><span>output</span><button id="clear">clear</button></div>
+        <div id="output"></div>
+      </section>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
