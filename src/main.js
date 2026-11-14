@@ -1,10 +1,12 @@
 import { PRELUDE as prelude } from "./prelude.js";
 import { createEngine } from "./engine.js";
 import { createRepl } from "./repl.js";
+import { createGenerant } from "./generant.js";
+import { createEditor } from "./editor.js";
 import "./style.css";
 
 const $ = (id) => document.getElementById(id);
-const editor = $("editor");
+const host = $("editor");
 const out = $("output");
 const statusEl = $("status");
 const bootBtn = $("boot");
@@ -31,6 +33,13 @@ const SEED = `;; Boot, then Cmd/Ctrl-Enter evaluates the selection (or everythin
 ;;                    :cutoff (pexprand 600 4000 :inf))
 ;;       {:metro m :quant 4})
 ;; (pstop :lead)
+
+;; Generant bridge — with the Generant desktop app running:
+;; (generant/connect) (generant/devices) (generant/help)
+;; (def bass (generant/device "Bass Lane"))
+;; (bass :pattern "i-dotted" 3)   <- swap its bank lane live
+;; (generant/note "Bass Lane" 33) (generant/tempo 122) (generant/play)
+;; type a quote or g and autocomplete offers your live synths + bank patterns
 `;
 
 function log(kind, text) {
@@ -51,6 +60,10 @@ function setStatus(s, detail) {
 const engine = createEngine({ log, onStatus: setStatus });
 setStatus("idle", "press Boot to start audio");
 
+const generant = createGenerant();
+engine.generant = generant; // (.-generant js/ovt) from Clojure
+engine.editor = null; // set below once the CodeMirror view exists
+
 let repl;
 try {
   if (!globalThis.scittle?.core?.eval_string) throw new Error("scittle.js did not load");
@@ -62,33 +75,52 @@ try {
 
 // Buffers saved by the first slice are replaced once by the new example.
 const saved = localStorage.getItem("ovt-buffer-v2");
-editor.value = saved ?? SEED;
-editor.addEventListener("input", () => localStorage.setItem("ovt-buffer-v2", editor.value));
+const editor = createEditor({
+  parent: host,
+  initial: saved ?? SEED,
+  onChange: (text) => localStorage.setItem("ovt-buffer-v2", text),
+  getSnapshot: () => generant.snapshot(),
+  onStop: () => {
+    const r = repl?.evaluate("(stop)");
+    log(r?.ok ? "info" : "error", r?.ok ? "stopped" : r?.value ?? "evaluator not ready");
+  },
+  onEval: () => evalNow(),
+});
+engine.editor = editor; // console/debug access: ovt.editor.view is the CM6 EditorView
+
+let generantState = generant.snapshot();
+async function generantRefresh(quiet) {
+  try {
+    generantState = await generant.refresh();
+    log("info", `Generant: ${generantState.devices?.length ?? 0} devices, ${generantState.banks?.defs?.length ?? 0} banks @ ${generantState.bpm ?? "?"} bpm`);
+    return generantState;
+  } catch (e) {
+    if (!quiet) log("error", e.message);
+    return null;
+  }
+}
 
 function evalNow() {
   if (!repl) return;
-  const { selectionStart: a, selectionEnd: b, value } = editor;
-  const code = a !== b ? value.slice(a, b) : value;
+  const sel = editor.selection();
+  const code = sel.from !== sel.to ? sel.text : editor.getValue();
   if (!code.trim()) return;
   log("input", code.trim().split("\n").filter((l) => !l.trim().startsWith(";")).join("\n") || code.trim());
   const r = repl.evaluate(code);
   log(r.ok ? "result" : "error", r.ok ? `=> ${r.value}` : r.value);
   r.promise?.then((pr) => log(pr.ok ? "result" : "error", pr.ok ? `=> ${pr.value}` : pr.value));
-  editor.classList.add("flash");
-  setTimeout(() => editor.classList.remove("flash"), 150);
+  editor.flash();
 }
 
-// init() is only ever reached from this click handler.
+// Pull a Generant snapshot when the bridge namespace loads, so autocomplete
+// offers live devices even before the first manual refresh.
+const originalEvaluate = repl.evaluate.bind(repl);
+repl.evaluate = (code) => {
+  const r = originalEvaluate(code);
+  if (/\(generant\/connect\b|\(generant\/refresh\b/.test(String(code))) generantRefresh(false);
+  return r;
+};
+
 bootBtn.addEventListener("click", () => engine.boot());
 evalBtn.addEventListener("click", evalNow);
-editor.addEventListener("keydown", (e) => {
-  if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-    e.preventDefault();
-    evalNow();
-  } else if ((e.metaKey || e.ctrlKey) && e.key === ".") {
-    e.preventDefault();
-    const r = repl?.evaluate("(stop)");
-    log(r?.ok ? "info" : "error", r?.ok ? "stopped" : r?.value ?? "evaluator not ready");
-  }
-});
 $("clear").addEventListener("click", () => (out.textContent = ""));
